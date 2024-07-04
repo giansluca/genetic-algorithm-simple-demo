@@ -1,23 +1,24 @@
 package org.gmdev;
 
 import org.gmdev.genetic.Algorithm;
-import org.gmdev.genetic.FitnessCalc;
+import org.gmdev.genetic.FitnessCalculator;
 import org.gmdev.genetic.Population;
 
 public class Main {
 
     public static void main(String[] args) {
         // Set a candidate solution
-        FitnessCalc.setSolution("1111000000000000000000000000000000000000000000000000000000001111");
+        FitnessCalculator fitnessCalculator = FitnessCalculator.getInstance();
+        fitnessCalculator.setSolutionFromString("1111000000000000000000000000000000000000000000000000000000001111");
 
         // Create an initial population
         Population myPop = new Population(50, true);
 
         // Evolve our population until we reach an optimum solution
         int generationCount = 0;
-        while (myPop.getFittest().getFitness() < FitnessCalc.getMaxFitness()) {
+        while (myPop.getFittest().getFitness() < fitnessCalculator.getMaxFitness()) {
             generationCount++;
-            System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness() + " Max Fitness: " + FitnessCalc.getMaxFitness());
+            System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness() + " Max Fitness: " + fitnessCalculator.getMaxFitness());
             myPop = Algorithm.evolvePopulation(myPop);
         }
 

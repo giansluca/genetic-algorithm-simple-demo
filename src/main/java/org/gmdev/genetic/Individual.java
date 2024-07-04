@@ -2,36 +2,16 @@ package org.gmdev.genetic;
 
 public class Individual {
 	
-	private static int defaultGeneLength = 64;
+	private static final int DEFAULT_GENE_LENGTH = 64;
 	
-    private final byte[] genes = new byte[defaultGeneLength];
+    private final byte[] genes = new byte[DEFAULT_GENE_LENGTH];
     private int fitness = 0;
-    
-    public byte getGene(int index) {
-        return genes[index];
-    }
-    
-    public void setGene(int index, byte value) {
-        this.genes[index] = value;
-        this.fitness = 0;
-    }
-    
-    /**
-     * Create a random individual
-     */
+
     public void generateIndividual() {
         for (int i = 0; i < this.size(); i++) {
             byte gene = (byte) Math.round(Math.random());
             genes[i] = gene;
         }
-    }
-    
-    /**
-     * 	Set the genes default length
-     *  Use this if you want to create individuals with different gene lengths
-     */
-    public static void setDefaultGeneLength(int length) {
-        defaultGeneLength = length;
     }
     
     public int size() {
@@ -40,22 +20,31 @@ public class Individual {
     
     public int getFitness() {
     	if (fitness == 0) {
-    		fitness = FitnessCalc.getFitness(this);
+            var fitnessCalculator = FitnessCalculator.getInstance();
+    		fitness = fitnessCalculator.getFitness(this);
     	}
     	
     	return fitness;
     }
+
+    public byte getGene(int index) {
+        return genes[index];
+    }
+
+    public void setGene(int index, byte value) {
+        this.genes[index] = value;
+        this.fitness = 0;
+    }
     
     @Override
     public String toString() {
-        String geneString = "";
+        StringBuilder geneString = new StringBuilder();
         
         for (int i = 0; i < this.size(); i++) {
-            geneString += getGene(i);
+            geneString.append(getGene(i));
         }
         
-        return geneString;
+        return geneString.toString();
     }
-    
     
 }
