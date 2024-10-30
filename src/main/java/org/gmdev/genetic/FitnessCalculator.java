@@ -30,7 +30,7 @@ public class FitnessCalculator {
         this.solution = new byte[SOLUTION_SIZE];
 
         for (int i = 0; i < solution.length(); i++) {
-            String character =  Character.toString(solution.charAt(i));
+            String character = Character.toString(solution.charAt(i));
             
             if (character.contains("0") || character.contains("1"))
                 this.solution[i] = Byte.parseByte(character, 2);
