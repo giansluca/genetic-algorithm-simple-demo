@@ -5,17 +5,21 @@ import lombok.Getter;
 @Getter
 public class Individual {
 	
-	private static final int DEFAULT_GENE_LENGTH = 64;
+	private static final int GENES_SIZE = FitnessCalculator.SOLUTION_SIZE;
 	
     private final byte[] genes;
     private int fitness = 0;
 
     public Individual(byte[] genes) {
+        if (genes.length != GENES_SIZE)
+            throw new IllegalArgumentException(String.format(
+                    "genes size must be equal to: %s, but it is %s", GENES_SIZE, genes.length));
+
         this.genes = genes;
     }
 
     public Individual() {
-        this.genes = new byte[DEFAULT_GENE_LENGTH];
+        this.genes = new byte[GENES_SIZE];
     }
 
     public void generateIndividual() {

@@ -71,7 +71,7 @@ public class FitnessCalculatorTest {
     void itShouldThrowGettingIndividualFitnessIfCandidateSolutionIsNotSet() {
         // Given
         String genesString = "1111000000000000000000000000000000000000000000000000000000001110";
-        byte[] genes = fitnessCalculator.fromBytesString(genesString, genesString.length());
+        byte[] genes = fitnessCalculator.getByteArrayFromBytesString(genesString, genesString.length());
         Individual individual = new Individual(genes);
 
         // When - Then
@@ -82,21 +82,40 @@ public class FitnessCalculatorTest {
     }
 
     @Test
-    void itShouldGetIndividualFitness() {
+    void itShouldGetIndividualFitnessOf60() {
         // Given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
         fitnessCalculator.setCandidateSolution(solutionString);
 
-        String genesString = "1111000000000000000000000000000000000000000000000000000000001110";
-        byte[] genes = fitnessCalculator.fromBytesString(genesString, genesString.length());
+        // last 4 bytes are different from solution
+        String genesString = "1111000000000000000000000000000000000000000000000000000000000000";
+        byte[] genes = fitnessCalculator.getByteArrayFromBytesString(genesString, genesString.length());
         Individual individual = new Individual(genes);
 
         // When
         int fitness = fitnessCalculator.getFitness(individual);
 
         // Then
-        assertThat(fitness).isEqualTo(fitnessCalculator.getMaxFitness() -1);
-        assertThat(fitness).isEqualTo(63);
+        assertThat(fitness).isEqualTo(fitnessCalculator.getMaxFitness() -4);
+        assertThat(fitness).isEqualTo(FitnessCalculator.SOLUTION_SIZE -4);
+    }
+
+    @Test
+    void itShouldGetIndividualFitnessOfMaxFitness() {
+        // Given
+        String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
+        fitnessCalculator.setCandidateSolution(solutionString);
+
+        String genesString = "1111000000000000000000000000000000000000000000000000000000001111";
+        byte[] genes = fitnessCalculator.getByteArrayFromBytesString(genesString, genesString.length());
+        Individual individual = new Individual(genes);
+
+        // When
+        int fitness = fitnessCalculator.getFitness(individual);
+
+        // Then
+        assertThat(fitness).isEqualTo(fitnessCalculator.getMaxFitness());
+        assertThat(fitness).isEqualTo(FitnessCalculator.SOLUTION_SIZE);
     }
 
 }

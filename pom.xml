@@ -37,6 +37,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Burningwave -->
+        <dependency>
+            <groupId>org.burningwave</groupId>
+            <artifactId>core</artifactId>
+            <version>12.65.2</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
