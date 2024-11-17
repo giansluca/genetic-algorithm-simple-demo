@@ -1,11 +1,16 @@
 package org.gmdev.genetic;
 
+import lombok.Getter;
+
+import java.util.List;
+
+@Getter
 public class FitnessCalculator {
 	
     public static final int SOLUTION_SIZE = 64;
     private static FitnessCalculator INSTANCE;
 
-	private byte[] solution;
+	private byte[] candidateSolution;
 
     private FitnessCalculator() {}
 
@@ -18,34 +23,40 @@ public class FitnessCalculator {
     }
 
     /**
-     * Set a candidate solution as a String of 0s and 1s
+     * Set a candidate candidateSolution as a byte array of '0' and '1'
      */
-    public void setSolutionFromString(String solution) {
-        if (solution == null)
-            throw new IllegalArgumentException("String solution cannot be null");
-        if (solution.length() != SOLUTION_SIZE)
+    public void setCandidateSolution(String solutionString) {
+        if (solutionString == null)
+            throw new IllegalArgumentException("solutionString cannot be null");
+        if (solutionString.length() != SOLUTION_SIZE)
             throw new IllegalArgumentException(
-                    String.format("String solution size must be equal to: %s, but it is %s", SOLUTION_SIZE, solution.length()));
+                    String.format("solutionString size must be equal to: %s, but it is %s", SOLUTION_SIZE, solutionString.length()));
 
-        this.solution = new byte[SOLUTION_SIZE];
+        this.candidateSolution = fromBytesString(solutionString, SOLUTION_SIZE);
+    }
 
-        for (int i = 0; i < solution.length(); i++) {
-            String character = Character.toString(solution.charAt(i));
-            
-            if (character.contains("0") || character.contains("1"))
-                this.solution[i] = Byte.parseByte(character, 2);
-            else
-                throw new IllegalArgumentException(String.format("Value %s cannot be accepted", character));
+    public byte[] fromBytesString(String bytesString, int size) {
+        byte[] byteArray = new byte[size];
+
+        for (int i = 0; i < size; i++) {
+            String stringChar = Character.toString(bytesString.charAt(i));
+
+            if (!List.of("0", "1").contains(stringChar))
+                throw new IllegalArgumentException(String.format("Value %s cannot be accepted", stringChar));
+
+            byteArray[i] = Byte.parseByte(stringChar, 2);
         }
+
+        return byteArray;
     }
 
     public int getFitness(Individual individual) {
-        if (solution == null)
-            throw new IllegalArgumentException("String solution cannot be null");
+        if (this.candidateSolution == null)
+            throw new IllegalStateException("candidateSolution cannot be null");
 
         int fitness = 0;
-        for (int i = 0; (i < individual.size() && i < solution.length); i++) {
-            if (individual.getGene(i) == solution[i]) {
+        for (int i = 0; (i < individual.getGenes().length && i < this.candidateSolution.length); i++) {
+            if (individual.getGene(i) == this.candidateSolution[i]) {
                 fitness++;
             }
         }
@@ -54,11 +65,11 @@ public class FitnessCalculator {
     }
 
     public int getMaxFitness() {
-        return solution.length;
+        return this.candidateSolution.length;
     }
 
-    public byte[] getSolution() {
-        return solution;
+    public void resetCandidateSolution() {
+        this.candidateSolution = null;
     }
 
 }

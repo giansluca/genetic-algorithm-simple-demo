@@ -50,7 +50,7 @@ public class Algorithm {
         Individual newSol = new Individual();
         
         // Loop through genes
-        for (int i = 0; i < indiv1.size(); i++) {
+        for (int i = 0; i < indiv1.getGenes().length; i++) {
             // Crossover
             if (Math.random() <= uniformRate) {
                 newSol.setGene(i, indiv1.getGene(i));
@@ -86,7 +86,7 @@ public class Algorithm {
      */
     private static void mutate(Individual indiv) {
         // Loop through genes
-        for (int i = 0; i < indiv.size(); i++) {
+        for (int i = 0; i < indiv.getGenes().length; i++) {
             if (Math.random() <= mutationRate) {
                 // Create random gene
                 byte gene = (byte) Math.round(Math.random());

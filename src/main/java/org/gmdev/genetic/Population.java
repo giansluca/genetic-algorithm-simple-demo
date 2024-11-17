@@ -3,16 +3,11 @@ package org.gmdev.genetic;
 public class Population {
 	
 	private final Individual[] individuals;
-	
-	/**
-	 * Constructors - create a population
-	 */
+
     public Population(int populationSize, boolean initialize) {
         this.individuals = new Individual[populationSize];
-        
-        // Initialise population
+
         if (initialize) {
-            // Loop and create individuals
             for (int i = 0; i < this.size(); i++) {
                 Individual newIndividual = new Individual();
                 newIndividual.generateIndividual();

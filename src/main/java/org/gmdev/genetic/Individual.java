@@ -1,46 +1,53 @@
 package org.gmdev.genetic;
 
+import lombok.Getter;
+
+@Getter
 public class Individual {
 	
 	private static final int DEFAULT_GENE_LENGTH = 64;
 	
-    private final byte[] genes = new byte[DEFAULT_GENE_LENGTH];
+    private final byte[] genes;
     private int fitness = 0;
 
+    public Individual(byte[] genes) {
+        this.genes = genes;
+    }
+
+    public Individual() {
+        this.genes = new byte[DEFAULT_GENE_LENGTH];
+    }
+
     public void generateIndividual() {
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 0; i < this.genes.length; i++) {
             byte gene = (byte) Math.round(Math.random());
-            genes[i] = gene;
+            this.genes[i] = gene;
         }
     }
     
-    public int size() {
-        return genes.length;
-    }
-    
     public int getFitness() {
-    	if (fitness == 0) {
+    	if (this.fitness == 0) {
             var fitnessCalculator = FitnessCalculator.getInstance();
-    		fitness = fitnessCalculator.getFitness(this);
+            this.fitness = fitnessCalculator.getFitness(this);
     	}
     	
-    	return fitness;
+    	return this.fitness;
     }
 
     public byte getGene(int index) {
-        return genes[index];
+        return this.genes[index];
     }
 
     public void setGene(int index, byte value) {
         this.genes[index] = value;
         this.fitness = 0;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder geneString = new StringBuilder();
         
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 0; i < this.genes.length; i++) {
             geneString.append(getGene(i));
         }
         
