@@ -1,8 +1,9 @@
 package org.gmdev;
 
-import org.gmdev.genetic.Algorithm;
 import org.gmdev.genetic.FitnessCalculator;
 import org.gmdev.genetic.Population;
+
+import static org.gmdev.genetic.Algorithm.evolvePopulation;
 
 public class Main {
 
@@ -13,7 +14,7 @@ public class Main {
         // Set a candidate solution
         FitnessCalculator fitnessCalculator = new FitnessCalculator(SOLUTION_STRING);
 
-        // Create an initial population
+        // Create the initial population
         Population pop = new Population(POPULATION_SIZE, true, fitnessCalculator);
 
         // Evolve our population until we reach an optimum solution
@@ -21,7 +22,7 @@ public class Main {
         while (pop.getFittest().getFitness() < fitnessCalculator.getMaxFitness()) {
             generationCount++;
             System.out.println("Generation: " + generationCount + " Fittest: " + pop.getFittest().getFitness() + " Max Fitness: " + fitnessCalculator.getMaxFitness());
-            pop = Algorithm.evolvePopulation(pop, fitnessCalculator);
+            pop = evolvePopulation(pop, fitnessCalculator);
         }
 
         System.out.println("Solution found!");

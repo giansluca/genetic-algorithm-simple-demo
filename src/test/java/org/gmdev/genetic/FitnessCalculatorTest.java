@@ -9,25 +9,25 @@ public class FitnessCalculatorTest {
 
     @Test
     void itShouldThrowIfSolutionStringInputSizeIsNotValid() {
-        // Given a null solution string
-        // When - Then
+        // given a null solution string
+        // when - then
         Throwable thrown = catchThrowable(() -> new FitnessCalculator(""));
         assertThat(thrown)
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("solutionString cannot be empty");
 
-        // Given a not valid size solution1 string
+        // given a not valid size solution1 string
         String solutionString1 = "11110";
 
-        // When - Then
+        // when - then
         assertThatThrownBy(() -> new FitnessCalculator(solutionString1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("solutionString size must be equal to: 64, but it is 5");
 
-        // Given a not valid value solution1 string
+        // given a not valid value solution1 string
         String solutionString2 = "1111000000000000000000000000000000000000000000000000000000001112";
 
-        // When - Then
+        // when - then
         assertThatThrownBy(() -> new FitnessCalculator(solutionString2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Value 2 cannot be accepted");
@@ -35,14 +35,14 @@ public class FitnessCalculatorTest {
 
     @Test
     void itShouldSetCandidateSolutionFromString() {
-        // Given
+        // given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
         FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
-        // When
+        // when
         byte[] candidateSolution = fitnessCalculator.getCandidateSolution();
 
-        // Then
+        // then
         assertThat(candidateSolution).isNotNull();
         assertThat(candidateSolution).hasSize(FitnessCalculator.SOLUTION_SIZE);
         for (int i = 0; i < solutionString.length(); i++) {
@@ -55,7 +55,7 @@ public class FitnessCalculatorTest {
 
     @Test
     void itShouldGetIndividualFitnessOf60() {
-        // Given
+        // given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
         FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
@@ -64,17 +64,17 @@ public class FitnessCalculatorTest {
         byte[] genes = getByteArrayFromBytesString(genesString, genesString.length());
         Individual individual = new Individual(genes, fitnessCalculator);
 
-        // When
+        // when
         int fitness = fitnessCalculator.getFitness(individual);
 
-        // Then
+        // then
         assertThat(fitness).isEqualTo(fitnessCalculator.getMaxFitness() -4);
         assertThat(fitness).isEqualTo(FitnessCalculator.SOLUTION_SIZE -4);
     }
 
     @Test
     void itShouldGetIndividualMaxFitness() {
-        // Given
+        // given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
         FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
@@ -82,10 +82,10 @@ public class FitnessCalculatorTest {
         byte[] genes = getByteArrayFromBytesString(genesString, genesString.length());
         Individual individual = new Individual(genes, fitnessCalculator);
 
-        // When
+        // when
         int fitness = fitnessCalculator.getFitness(individual);
 
-        // Then
+        // then
         assertThat(fitness).isEqualTo(fitnessCalculator.getMaxFitness());
         assertThat(fitness).isEqualTo(FitnessCalculator.SOLUTION_SIZE);
     }

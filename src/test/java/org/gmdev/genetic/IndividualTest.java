@@ -11,14 +11,14 @@ class IndividualTest {
 
     @Test
     void itShouldCreateAnIndividualWithRandomGenes() {
-        // Given
+        // given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
         FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
-        // When
+        // when
         Individual individual = new Individual(fitnessCalculator);
 
-        // Then
+        // then
         assertThat(individual).isNotNull();
         assertThat(individual.getFitnessCalculator()).isNotNull();
         assertThat(individual.getGenes()).isNotNull();
@@ -27,17 +27,17 @@ class IndividualTest {
 
     @Test
     void itShouldCreateAnIndividualWithGivenGenes() {
-        // Given
+        // given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
         FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
         String genesString = "1111000000000000000000000000000000000000000000000000000000000000";
         byte[] genes = getByteArrayFromBytesString(genesString, genesString.length());
 
-        // When
+        // when
         Individual individual = new Individual(genes, fitnessCalculator);
 
-        // Then
+        // then
         assertThat(individual).isNotNull();
         assertThat(individual.getFitnessCalculator()).isNotNull();
         assertThat(individual.getGenes()).isNotNull();
