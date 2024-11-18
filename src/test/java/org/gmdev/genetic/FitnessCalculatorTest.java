@@ -1,40 +1,26 @@
 package org.gmdev.genetic;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.gmdev.utils.GeneticUtils.getByteArrayFromBytesString;
 
 public class FitnessCalculatorTest {
-
-    private FitnessCalculator fitnessCalculator;
-
-    @BeforeEach
-    void setUp() {
-        fitnessCalculator = FitnessCalculator.getInstance();
-    }
-
-    @AfterEach
-    void tearDown() {
-        fitnessCalculator.resetCandidateSolution();
-    }
 
     @Test
     void itShouldThrowIfSolutionStringInputSizeIsNotValid() {
         // Given a null solution string
-
         // When - Then
-        assertThatThrownBy(() -> fitnessCalculator.setCandidateSolution(null))
+        Throwable thrown = catchThrowable(() -> new FitnessCalculator(""));
+        assertThat(thrown)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("solutionString cannot be null");
+                .hasMessageContaining("solutionString cannot be empty");
 
         // Given a not valid size solution1 string
         String solutionString1 = "11110";
 
         // When - Then
-        assertThatThrownBy(() -> fitnessCalculator.setCandidateSolution(solutionString1))
+        assertThatThrownBy(() -> new FitnessCalculator(solutionString1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("solutionString size must be equal to: 64, but it is 5");
 
@@ -42,7 +28,7 @@ public class FitnessCalculatorTest {
         String solutionString2 = "1111000000000000000000000000000000000000000000000000000000001112";
 
         // When - Then
-        assertThatThrownBy(() -> fitnessCalculator.setCandidateSolution(solutionString2))
+        assertThatThrownBy(() -> new FitnessCalculator(solutionString2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Value 2 cannot be accepted");
     }
@@ -51,13 +37,13 @@ public class FitnessCalculatorTest {
     void itShouldSetCandidateSolutionFromString() {
         // Given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
-        assertThat(fitnessCalculator.getCandidateSolution()).isNull();
+        FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
         // When
-        fitnessCalculator.setCandidateSolution(solutionString);
         byte[] candidateSolution = fitnessCalculator.getCandidateSolution();
 
         // Then
+        assertThat(candidateSolution).isNotNull();
         assertThat(candidateSolution).hasSize(FitnessCalculator.SOLUTION_SIZE);
         for (int i = 0; i < solutionString.length(); i++) {
             char charSolutionElement = solutionString.charAt(i);
@@ -68,29 +54,15 @@ public class FitnessCalculatorTest {
     }
 
     @Test
-    void itShouldThrowGettingIndividualFitnessIfCandidateSolutionIsNotSet() {
-        // Given
-        String genesString = "1111000000000000000000000000000000000000000000000000000000001110";
-        byte[] genes = fitnessCalculator.getByteArrayFromBytesString(genesString, genesString.length());
-        Individual individual = new Individual(genes);
-
-        // When - Then
-        assertThatThrownBy(() -> fitnessCalculator.getFitness(individual))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("candidateSolution cannot be null");
-
-    }
-
-    @Test
     void itShouldGetIndividualFitnessOf60() {
         // Given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
-        fitnessCalculator.setCandidateSolution(solutionString);
+        FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
         // last 4 bytes are different from solution
         String genesString = "1111000000000000000000000000000000000000000000000000000000000000";
-        byte[] genes = fitnessCalculator.getByteArrayFromBytesString(genesString, genesString.length());
-        Individual individual = new Individual(genes);
+        byte[] genes = getByteArrayFromBytesString(genesString, genesString.length());
+        Individual individual = new Individual(genes, fitnessCalculator);
 
         // When
         int fitness = fitnessCalculator.getFitness(individual);
@@ -101,14 +73,14 @@ public class FitnessCalculatorTest {
     }
 
     @Test
-    void itShouldGetIndividualFitnessOfMaxFitness() {
+    void itShouldGetIndividualMaxFitness() {
         // Given
         String solutionString = "1111000000000000000000000000000000000000000000000000000000001111";
-        fitnessCalculator.setCandidateSolution(solutionString);
+        FitnessCalculator fitnessCalculator = new FitnessCalculator(solutionString);
 
         String genesString = "1111000000000000000000000000000000000000000000000000000000001111";
-        byte[] genes = fitnessCalculator.getByteArrayFromBytesString(genesString, genesString.length());
-        Individual individual = new Individual(genes);
+        byte[] genes = getByteArrayFromBytesString(genesString, genesString.length());
+        Individual individual = new Individual(genes, fitnessCalculator);
 
         // When
         int fitness = fitnessCalculator.getFitness(individual);

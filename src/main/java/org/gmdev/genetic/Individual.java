@@ -2,37 +2,42 @@ package org.gmdev.genetic;
 
 import lombok.Getter;
 
+import java.util.stream.IntStream;
+
 @Getter
 public class Individual {
 	
 	private static final int GENES_SIZE = FitnessCalculator.SOLUTION_SIZE;
-	
+
+    private final FitnessCalculator fitnessCalculator;
     private final byte[] genes;
     private int fitness = 0;
 
-    public Individual(byte[] genes) {
+    public Individual(byte[] genes, FitnessCalculator fitnessCalculator) {
         if (genes.length != GENES_SIZE)
             throw new IllegalArgumentException(String.format(
                     "genes size must be equal to: %s, but it is %s", GENES_SIZE, genes.length));
 
         this.genes = genes;
+        this.fitnessCalculator = fitnessCalculator;
     }
 
-    public Individual() {
-        this.genes = new byte[GENES_SIZE];
+    public Individual(FitnessCalculator fitnessCalculator) {
+        this.genes = generateIndividualGenes();
+        this.fitnessCalculator = fitnessCalculator;
     }
 
-    public void generateIndividual() {
-        for (int i = 0; i < this.genes.length; i++) {
-            byte gene = (byte) Math.round(Math.random());
-            this.genes[i] = gene;
-        }
+    private byte[] generateIndividualGenes() {
+        byte[] genes = new byte[GENES_SIZE];
+        IntStream.range(0, GENES_SIZE)
+                .forEach(i -> genes[i] = (byte) Math.round(Math.random()));
+
+        return genes;
     }
     
     public int getFitness() {
     	if (this.fitness == 0) {
-            var fitnessCalculator = FitnessCalculator.getInstance();
-            this.fitness = fitnessCalculator.getFitness(this);
+            this.fitness = this.fitnessCalculator.getFitness(this);
     	}
     	
     	return this.fitness;
@@ -50,10 +55,8 @@ public class Individual {
     @Override
     public String toString() {
         StringBuilder geneString = new StringBuilder();
-        
-        for (int i = 0; i < this.genes.length; i++) {
-            geneString.append(getGene(i));
-        }
+        IntStream.range(0, this.genes.length)
+                .forEach(i -> geneString.append(getGene(i)));
         
         return geneString.toString();
     }

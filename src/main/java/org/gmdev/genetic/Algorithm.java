@@ -10,8 +10,8 @@ public class Algorithm {
     /**
      * Evolve a population
      */
-    public static Population evolvePopulation(Population pop) {
-        Population newPopulation = new Population(pop.size(), false);
+    public static Population evolvePopulation(Population pop, FitnessCalculator fitnessCalculator) {
+        Population newPopulation = new Population(pop.size(), false, fitnessCalculator);
 
         // Keep our best individual
         if (elitism) {
@@ -29,9 +29,9 @@ public class Algorithm {
         
         // Loop over the population size and create new individuals with crossover
         for (int i = elitismOffset; i < pop.size(); i++) {
-            Individual indiv1 = tournamentSelection(pop);
-            Individual indiv2 = tournamentSelection(pop);
-            Individual newIndiv = crossover(indiv1, indiv2);
+            Individual indiv1 = tournamentSelection(pop, fitnessCalculator);
+            Individual indiv2 = tournamentSelection(pop, fitnessCalculator);
+            Individual newIndiv = crossover(indiv1, indiv2, fitnessCalculator);
             newPopulation.saveIndividual(i, newIndiv);
         }
 
@@ -46,8 +46,8 @@ public class Algorithm {
     /**
      * Crossover individuals
      */
-    private static Individual crossover(Individual indiv1, Individual indiv2) {
-        Individual newSol = new Individual();
+    private static Individual crossover(Individual indiv1, Individual indiv2, FitnessCalculator fitnessCalculator) {
+        Individual newSol = new Individual(fitnessCalculator);
         
         // Loop through genes
         for (int i = 0; i < indiv1.getGenes().length; i++) {
@@ -65,9 +65,9 @@ public class Algorithm {
     /**
      * Select individuals for crossover
      */
-    private static Individual tournamentSelection(Population pop) {
+    private static Individual tournamentSelection(Population pop, FitnessCalculator fitnessCalculator) {
         // Create a tournament population
-        Population tournament = new Population(tournamentSize, false);
+        Population tournament = new Population(tournamentSize, false, fitnessCalculator);
         
         // For each place in the tournament get a random individual
         for (int i = 0; i < tournamentSize; i++) {

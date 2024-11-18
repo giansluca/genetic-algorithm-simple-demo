@@ -4,30 +4,25 @@ import lombok.Getter;
 
 import java.util.List;
 
+import static org.gmdev.utils.GeneticUtils.getByteArrayFromBytesString;
+
 @Getter
 public class FitnessCalculator {
 	
     public static final int SOLUTION_SIZE = 64;
-    private static FitnessCalculator INSTANCE;
 
 	private byte[] candidateSolution;
 
-    private FitnessCalculator() {}
-
-    public synchronized static FitnessCalculator getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE = new FitnessCalculator();
-        }
-
-        return INSTANCE;
+    public FitnessCalculator(String solutionString) {
+        this.setCandidateSolution(solutionString);
     }
 
     /**
      * Set a candidate candidateSolution as a byte array of '0' and '1'
      */
-    public void setCandidateSolution(String solutionString) {
-        if (solutionString == null)
-            throw new IllegalArgumentException("solutionString cannot be null");
+    private void setCandidateSolution(String solutionString) {
+        if (solutionString == null || solutionString.isEmpty())
+            throw new IllegalArgumentException("solutionString cannot be empty");
         if (solutionString.length() != SOLUTION_SIZE)
             throw new IllegalArgumentException(String.format(
                     "solutionString size must be equal to: %s, but it is %s", SOLUTION_SIZE, solutionString.length()));
@@ -38,21 +33,6 @@ public class FitnessCalculator {
         });
 
         this.candidateSolution = getByteArrayFromBytesString(solutionString, SOLUTION_SIZE);
-    }
-
-    public byte[] getByteArrayFromBytesString(String bytesString, int size) {
-        if (bytesString == null)
-            throw new IllegalArgumentException("bytesString cannot be null");
-        if (size <= 0)
-            throw new IllegalArgumentException("size cannot be less or equal to zero");
-
-        byte[] byteArray = new byte[size];
-        for (int i = 0; i < size; i++) {
-            String stringChar = Character.toString(bytesString.charAt(i));
-            byteArray[i] = Byte.parseByte(stringChar, 2);
-        }
-
-        return byteArray;
     }
 
     public int getFitness(Individual individual) {
@@ -71,10 +51,6 @@ public class FitnessCalculator {
 
     public int getMaxFitness() {
         return this.candidateSolution.length;
-    }
-
-    public void resetCandidateSolution() {
-        this.candidateSolution = null;
     }
 
 }

@@ -1,18 +1,15 @@
 package org.gmdev.genetic;
 
 public class Population {
-	
-	private final Individual[] individuals;
 
-    public Population(int populationSize, boolean initialize) {
+    private final Individual[] individuals;
+
+    public Population(int populationSize, boolean initialize, FitnessCalculator fitnessCalculator) {
         this.individuals = new Individual[populationSize];
 
         if (initialize) {
-            for (int i = 0; i < this.size(); i++) {
-                Individual newIndividual = new Individual();
-                newIndividual.generateIndividual();
-                saveIndividual(i, newIndividual);
-            }
+            for (int i = 0; i < this.size(); i++)
+                saveIndividual(i, new Individual(fitnessCalculator));
         }
     }
     
