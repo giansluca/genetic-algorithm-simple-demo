@@ -50,7 +50,7 @@ public class FitnessCalculator {
     }
 
     public int getMaxFitness() {
-        return this.candidateSolution.length;
+        return SOLUTION_SIZE;
     }
 
 }

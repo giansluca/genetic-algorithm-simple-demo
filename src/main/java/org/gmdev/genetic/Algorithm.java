@@ -1,12 +1,16 @@
 package org.gmdev.genetic;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Random;
+
 public class Algorithm {
 
     private static final double UNIFORM_RATE = 0.5;
     private static final double MUTATION_RATE = 0.015;
     private static final int TOURNAMENT_SIZE = 5;
     private static final boolean ELITISM = true;
-    
+
     /**
      * Evolve a population
      */
@@ -66,8 +70,8 @@ public class Algorithm {
         
         // for each place in the tournament get a random individual
         for (int i = 0; i < TOURNAMENT_SIZE; i++) {
-            int randomId = (int) (Math.random() * pop.size());
-            tournament.saveIndividual(i, pop.getIndividual(randomId));
+            int randomIndividualIndex = getRandomIntFroZeroTo(pop.size() - 1);
+            tournament.saveIndividual(i, pop.getIndividual(randomIndividualIndex));
         }
         
         // get the fittest
@@ -77,15 +81,30 @@ public class Algorithm {
     /**
      * Mutate an individual
      */
-    private static void mutate(Individual indiv) {
+    private static void mutate(Individual individual) {
         // loop through genes
-        for (int i = 0; i < indiv.getGenes().length; i++) {
-            if (Math.random() <= MUTATION_RATE) {
+        for (int i = 0; i < individual.getGenes().length; i++) {
+            double random = getRandomDoubleFroZeroTo(1.00, 4);
+            if (random <= MUTATION_RATE) {
                 // create random gene
                 byte gene = (byte) Math.round(Math.random());
-                indiv.setGene(i, gene);
+                individual.setGene(i, gene);
             }
         }
+    }
+
+    public static int getRandomIntFroZeroTo(int to) {
+        Random ran = new Random();
+        return ran.nextInt(to + 1);
+    }
+
+    public static double getRandomDoubleFroZeroTo(double to, int scale) {
+        Random ran = new Random();
+        double randomDouble = ran.nextDouble(to);
+
+        BigDecimal bd = new BigDecimal(Double.toString(randomDouble));
+        bd = bd.setScale(scale, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 }
