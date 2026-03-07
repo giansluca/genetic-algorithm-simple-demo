@@ -17,7 +17,7 @@ public class MapperFactory {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
             mapper.registerModule(new JavaTimeModule());
         }
